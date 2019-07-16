@@ -44,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
+        // Listens when signup is clicked and changes view from LoginActivity to RegisterActivity
         txt_signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        // Login button listener - performing login upon clicking
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,10 +63,12 @@ public class LoginActivity extends AppCompatActivity {
                 String str_email = email.getText().toString();
                 String str_password = password.getText().toString();
 
+                // Checks if the email/password is empty
                 if (TextUtils.isEmpty(str_email) || TextUtils.isEmpty(str_password)) {
                     pd.dismiss();
                     Toast.makeText(LoginActivity.this, "All fields are required", Toast.LENGTH_SHORT).show();
                 } else {
+                    // SignIn using Firebase Authentication
                     auth.signInWithEmailAndPassword(str_email, str_password)
                             .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override
@@ -89,6 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                                             }
                                         });
                                     } else {
+                                        // Raise error if authentication fails
                                         pd.dismiss();
                                         Toast.makeText(LoginActivity.this, "Authentication failed", Toast.LENGTH_SHORT).show();
                                     }

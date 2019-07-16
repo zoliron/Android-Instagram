@@ -37,6 +37,7 @@ public class StartActivity extends AppCompatActivity {
         login = findViewById(R.id.login);
         register = findViewById(R.id.register);
 
+        // Login button listener - moving to LoginActivity when pressed
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,6 +45,7 @@ public class StartActivity extends AppCompatActivity {
             }
         });
 
+        // Register button listener - moving to RegisterActivity when pressed
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

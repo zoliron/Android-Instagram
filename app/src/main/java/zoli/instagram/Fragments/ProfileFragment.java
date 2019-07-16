@@ -14,6 +14,7 @@ import zoli.instagram.R;
 
 public class ProfileFragment extends Fragment {
 
+    // Inflate profile fragment to the reusable container
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

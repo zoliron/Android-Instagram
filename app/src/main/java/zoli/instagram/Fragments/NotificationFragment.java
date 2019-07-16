@@ -14,6 +14,8 @@ import zoli.instagram.R;
 
 
 public class NotificationFragment extends Fragment {
+
+    // Inflate notification fragment to the reusable container
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

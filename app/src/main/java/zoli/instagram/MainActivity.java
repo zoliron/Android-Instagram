@@ -27,13 +27,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Gets the navigation bar
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
+        // Sets the navigation bar item selected listener
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
 
+        // Setting the default fragment to Home Fragment at startup
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
     }
 
+    // Listener for item selected on the navigation bar
     private BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {

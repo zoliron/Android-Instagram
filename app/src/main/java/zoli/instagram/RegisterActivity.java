@@ -47,6 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
+        // Listens when login is clicked and changes view from RegisterActivity to LoginActivity
         txt_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,6 +55,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        // Register button listener - performing registration upon clicking
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,6 +68,7 @@ public class RegisterActivity extends AppCompatActivity {
                 String str_email = email.getText().toString();
                 String str_password = password.getText().toString();
 
+                // Checks if the parameters are not empty and password is bigger than 6 characters
                 if (TextUtils.isEmpty(str_username) || TextUtils.isEmpty(str_fullname) || TextUtils.isEmpty(str_email) || TextUtils.isEmpty(str_password)){
                     pd.dismiss();
                     Toast.makeText(RegisterActivity.this, "All fields are required!", Toast.LENGTH_SHORT).show();
@@ -79,6 +82,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    // Creating new user in Firebase Authentication and store his/her information in Firebase Database
     private void register(final String username, final String fullname, final String email, String password){
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
