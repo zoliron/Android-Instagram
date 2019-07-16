@@ -67,32 +67,34 @@ public class RegisterActivity extends AppCompatActivity {
                 String str_password = password.getText().toString();
 
                 if (TextUtils.isEmpty(str_username) || TextUtils.isEmpty(str_fullname) || TextUtils.isEmpty(str_email) || TextUtils.isEmpty(str_password)){
+                    pd.dismiss();
                     Toast.makeText(RegisterActivity.this, "All fields are required!", Toast.LENGTH_SHORT).show();
                 } else if (str_password.length() < 6){
+                    pd.dismiss();
                     Toast.makeText(RegisterActivity.this, "Password must have atleast 6 characters", Toast.LENGTH_SHORT).show();
                 } else {
-
+                    register(str_username, str_fullname, str_email, str_password);
                 }
             }
         });
     }
 
-    private void register(final String username, final String fullname, String email, String password){
-
+    private void register(final String username, final String fullname, final String email, String password){
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
                             FirebaseUser firebaseUser = auth.getCurrentUser();
-                            String userid = firebaseUser.getUid();
+                            String userID = firebaseUser.getUid();
 
-                            reference = FirebaseDatabase.getInstance().getReference().child("Users").child(userid);
+                            reference = FirebaseDatabase.getInstance().getReference().child("Users").child(userID);
 
                             HashMap<String, Object> hashMap = new HashMap<>();
-                            hashMap.put("id", userid);
+                            hashMap.put("id", userID);
                             hashMap.put("username", username);
                             hashMap.put("fullname", fullname);
+                            hashMap.put("email", email);
                             hashMap.put("bio", "");
                             hashMap.put("imageurl", "https://firebasestorage.googleapis.com/v0/b/android-instagram-89c73.appspot.com/o/placeholder.png?alt=media&token=d5425fe4-9252-492f-8b69-44c81da0c754");
 
