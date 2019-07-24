@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,6 +25,8 @@ import zoli.instagram.Model.Post;
 import zoli.instagram.Model.User;
 import zoli.instagram.R;
 
+
+//Get the post info
 public class PostAdapter  extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
 
     public Context mContext;
@@ -44,6 +48,20 @@ public class PostAdapter  extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
+        firebaseUser =FirebaseAuth.getInstance().getCurrentUser();
+        Post post = mPost.get(position);
+
+        Glide.with(mContext).load(post.getPostimage()).into(holder.post_image);
+
+        if (post.getDescription().equals("")){
+            holder.description.setVisibility(View.GONE);
+        } else {
+            holder.description.setVisibility(View.VISIBLE);
+            holder.description.setText(post.getDescription());
+        }
+
+        publisherInfo(holder.image_profile, holder.username, holder.publisher, post.getPublisher());
 
     }
 
@@ -76,5 +94,22 @@ public class PostAdapter  extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
     }
 
 
+    private void publisherInfo(final ImageView image_profile, final TextView username, final TextView publisher, String userid){
+        DatabaseReference reference =FirebaseDatabase.getInstance().getReference("Users").child(userid);
 
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                Glide.with(mContext).load(user.getImageurl()).into(image_profile);
+                username.setText(user.getUsername());
+                publisher.setText(user.getUsername());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 }
