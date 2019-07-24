@@ -14,7 +14,7 @@ import zoli.instagram.R;
 
 public class HomeFragment extends Fragment {
 
-    private
+
 
     // Inflate home fragment to the reusable container
     @Override
