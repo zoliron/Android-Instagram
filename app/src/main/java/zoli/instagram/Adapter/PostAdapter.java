@@ -1,6 +1,7 @@
 package zoli.instagram.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
+import zoli.instagram.CommentsActivity;
 import zoli.instagram.Model.Post;
 import zoli.instagram.Model.User;
 import zoli.instagram.R;
@@ -64,6 +66,7 @@ public class PostAdapter  extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
         publisherInfo(holder.image_profile, holder.username, holder.publisher, post.getPublisher());
         isLikes(post.getPostid(), holder.like);
         nrLikes(holder.likes , post.getPostid());
+        getComments(post.getPostid(), holder.comments);
 
         //Update FB on likes status
         holder.like.setOnClickListener(new View.OnClickListener() {
@@ -80,6 +83,26 @@ public class PostAdapter  extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
             }
         });
 
+        holder.comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, CommentsActivity.class);
+                intent.putExtra("postid", post.getPostid());
+                intent.putExtra("publisherid", post.getPublisher());
+                mContext.startActivity(intent);
+            }
+        });
+
+
+        holder.comments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, CommentsActivity.class);
+                intent.putExtra("postid", post.getPostid());
+                intent.putExtra("publisherid", post.getPublisher());
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -108,6 +131,23 @@ public class PostAdapter  extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
 
 
         }
+    }
+
+    //
+    private void getComments(String postid, final TextView comments){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Comments").child(postid);
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                comments.setText("View All "+dataSnapshot.getChildrenCount() + " Comments"); //add this line under every post that keep count the numbers of comments
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 //Make possible to users to like a post

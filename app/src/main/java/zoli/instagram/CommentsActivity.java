@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,6 +25,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 
 import zoli.instagram.Model.User;
+
+//Enable the comment option for users to comment on each post
 
 public class CommentsActivity extends AppCompatActivity {
 
@@ -56,6 +59,8 @@ public class CommentsActivity extends AppCompatActivity {
         image_profile= findViewById(R.id.image_profile);
         post= findViewById(R.id.post);
 
+        firebaseUser =FirebaseAuth.getInstance().getCurrentUser();
+
         Intent intent = getIntent();
         postid = intent.getStringExtra("postid");
         publisherid = intent.getStringExtra("publisherid");
@@ -75,6 +80,7 @@ public class CommentsActivity extends AppCompatActivity {
 
     }
 
+    //Add the "comment" & "publisher" info for FB
     private void addComment(){
         DatabaseReference reference =FirebaseDatabase.getInstance().getReference("Comments").child(postid);
 
