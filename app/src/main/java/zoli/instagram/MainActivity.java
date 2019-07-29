@@ -33,8 +33,24 @@ public class MainActivity extends AppCompatActivity {
         // Sets the navigation bar item selected listener
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
 
-        // Setting the default fragment to Home Fragment at startup
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+        Bundle intent = getIntent().getExtras();
+        if (intent != null){
+            String publisher = intent.getString("publisherid");
+
+            SharedPreferences.Editor editor = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
+            editor.putString("profileid", publisher);
+            editor.apply();
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
+        } else {
+
+            // Setting the default fragment to Home Fragment at startup
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+
+        }
+
+
+
     }
 
     // Listener for item selected on the navigation bar
