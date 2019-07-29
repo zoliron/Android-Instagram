@@ -27,6 +27,8 @@ import zoli.instagram.Model.Comment;
 import zoli.instagram.Model.User;
 import zoli.instagram.R;
 
+
+//Display comment for  each post so we can see the comment when we publish
 public class CommentAdapter extends  RecyclerView.Adapter<CommentAdapter.ViewHolder>{
 
 
@@ -55,7 +57,7 @@ public class CommentAdapter extends  RecyclerView.Adapter<CommentAdapter.ViewHol
         final Comment comment = mComment.get(position);
 
         holder.comment.setText(comment.getComment());
-        getUserInfo(holder.image_profile, holder.comment, comment.getPublisher());
+        getUserInfo(holder.image_profile, holder.username, comment.getPublisher());
 
         holder.comment.setOnClickListener(new View.OnClickListener() {
             @Override
