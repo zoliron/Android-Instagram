@@ -237,7 +237,7 @@ public class PostAdapter  extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Saves").child(firebaseUser.getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) { //set the save icone
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) { //set the save icone and add him the tag 'saved'
                 if(dataSnapshot.child(postid).exists()){
                     imageView.setImageResource(R.drawable.ic_save_black);
                     imageView.setTag("saved");
