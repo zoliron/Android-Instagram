@@ -49,7 +49,7 @@ public class PostAdapter  extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
         firebaseUser =FirebaseAuth.getInstance().getCurrentUser();
         final Post post = mPost.get(position);
@@ -67,6 +67,21 @@ public class PostAdapter  extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
         isLikes(post.getPostid(), holder.like);
         nrLikes(holder.likes , post.getPostid());
         getComments(post.getPostid(), holder.comments);
+        isSaved(post.getPostid(), holder.save);
+
+        //update the save list on FB
+        holder.save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (holder.save.getTag().equals("save")){
+                    FirebaseDatabase.getInstance().getReference().child("Saves").child(firebaseUser.getUid()).child(post.getPostid()).setValue(true);
+                } else {
+
+                    FirebaseDatabase.getInstance().getReference().child("Saves").child(firebaseUser.getUid()).child(post.getPostid()).removeValue();
+
+                }
+            }
+        });
 
         //Update FB on likes status
         holder.like.setOnClickListener(new View.OnClickListener() {
@@ -207,6 +222,29 @@ public class PostAdapter  extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
                 Glide.with(mContext).load(user.getImageurl()).into(image_profile);
                 username.setText(user.getUsername());
                 publisher.setText(user.getUsername());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void isSaved(final String postid, final ImageView imageView){
+        FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Saves").child(firebaseUser.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) { //set the save icone
+                if(dataSnapshot.child(postid).exists()){
+                    imageView.setImageResource(R.drawable.ic_save_black);
+                    imageView.setTag("saved");
+                } else {
+                    imageView.setImageResource(R.drawable.ic_savee_black);
+                    imageView.setTag("save");
+                }
             }
 
             @Override
