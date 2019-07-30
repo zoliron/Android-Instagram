@@ -87,7 +87,7 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
-        // OnClickListener to define what to do when pressing close
+        // OnClickListener to define what to do when pressing close - closing
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,7 +95,7 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
-        // OnClickListener to define what to do when pressing change photo
+        // OnClickListener to define what to do when pressing change photo - let you change photo by clicking the profile image
         tv_change.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,7 +105,7 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
-        // OnClickListener to define what to do when pressing the android photo
+        // OnClickListener to define what to do when pressing the android photo - let you change photo by clicking the "change photo"
         image_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,6 +115,7 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
+        // OnClickListener to define what to do when pressing the android photo - saves the changes
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,6 +125,7 @@ public class EditProfileActivity extends AppCompatActivity {
         });
     }
 
+    // Updates the user data at Firebase Database
     private void updateProfile(String fullname, String username, String bio) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
 
@@ -143,6 +145,7 @@ public class EditProfileActivity extends AppCompatActivity {
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
+    // Uploading image to Firebase Storage
     private void uploadImage(){
         final ProgressDialog pd = new ProgressDialog(this);
         pd.setMessage("Uploading");
@@ -189,6 +192,7 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
+    // Getting the activity result and uploading the profile image
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
