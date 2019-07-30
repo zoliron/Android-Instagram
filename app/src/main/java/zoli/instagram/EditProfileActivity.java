@@ -121,6 +121,7 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 updateProfile(fullname.getText().toString(), username.getText().toString(), bio.getText().toString());
+                Toast.makeText(EditProfileActivity.this, "Saved Successfully", Toast.LENGTH_SHORT).show();
             }
         });
     }
