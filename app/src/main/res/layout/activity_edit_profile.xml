@@ -101,7 +101,7 @@
         <com.rengwuxian.materialedittext.MaterialEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/bui"
+            android:id="@+id/bio"
             android:hint="Bio"
             app:met_floatingLabel="normal" />
 

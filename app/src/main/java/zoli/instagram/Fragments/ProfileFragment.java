@@ -1,6 +1,7 @@
 package zoli.instagram.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.Image;
 import android.net.Uri;
@@ -34,6 +35,7 @@ import java.util.Collections;
 import java.util.List;
 
 import zoli.instagram.Adapter.MyFotoAdapter;
+import zoli.instagram.EditProfileActivity;
 import zoli.instagram.Model.Post;
 import zoli.instagram.Model.User;
 import zoli.instagram.R;
@@ -129,7 +131,7 @@ public class ProfileFragment extends Fragment {
                 String btn= edit_profile.getText().toString();
 
                 if (btn.equals("Edit Profile")){
-                    //go to Editprofile
+                    startActivity(new Intent(getContext(), EditProfileActivity.class));
                 } else if (btn.equals("follow")) { //if the user click on "follow" btn - we will add it to the FB under "Follow"
 
                     FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid())
