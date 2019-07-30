@@ -101,7 +101,6 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 CropImage.activity()
                         .setAspectRatio(1, 1)
-                        .setCropShape(CropImageView.CropShape.OVAL)
                         .start(EditProfileActivity.this);
             }
         });
@@ -112,7 +111,6 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 CropImage.activity()
                         .setAspectRatio(1, 1)
-                        .setCropShape(CropImageView.CropShape.OVAL)
                         .start(EditProfileActivity.this);
             }
         });
@@ -135,6 +133,8 @@ public class EditProfileActivity extends AppCompatActivity {
         hashMap.put("bio", bio);
 
         reference.updateChildren(hashMap);
+
+        Toast.makeText(EditProfileActivity.this, "Successfully Updated", Toast.LENGTH_SHORT).show();
     }
 
     private String getFileExtension(Uri uri){
@@ -170,7 +170,7 @@ public class EditProfileActivity extends AppCompatActivity {
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
 
                         HashMap<String, Object> hashMap = new HashMap<>();
-                        hashMap.put("imageUrl", ""+myUrl);
+                        hashMap.put("imageurl", ""+myUrl);
 
                         reference.updateChildren(hashMap);
                         pd.dismiss();
