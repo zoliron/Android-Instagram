@@ -148,7 +148,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 if (holder.like.getTag().equals("like")) {
                     LikeApi.REF_LIKES.child(post.getPostid())
                             .child(UserApi.currentUser.getUid()).setValue(true);
-                    addNotifications(post.getPublisher(), post.getPostid());
+                    NotificationApi.addLikeNotifications(post.getPublisher(), post.getPostid());
                 } else {
                     LikeApi.REF_LIKES.child(post.getPostid())
                             .child(UserApi.currentUser.getUid()).removeValue();
@@ -195,7 +195,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        switch (menuItem.getItemId()){
+                        switch (menuItem.getItemId()) {
                             case R.id.edit:
                                 editPost(post.getPostid());
                                 return true;
@@ -206,7 +206,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()){
+                                                if (task.isSuccessful()) {
                                                     NotificationApi.deleteNotifications(id, UserApi.currentUser.getUid(), mContext);
                                                 }
                                             }
@@ -221,7 +221,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     }
                 });
                 popupMenu.inflate(R.menu.post_menu);
-                if (!post.getPublisher().equals(UserApi.currentUser.getUid())){
+                if (!post.getPublisher().equals(UserApi.currentUser.getUid())) {
                     popupMenu.getMenu().findItem(R.id.edit).setVisible(false);
                     popupMenu.getMenu().findItem(R.id.delete).setVisible(false);
                 }
@@ -258,18 +258,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     }
 
 
-    private void addNotifications(String userid, String postid) {
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("userid", UserApi.currentUser.getUid());
-        hashMap.put("text", "Liked your post");
-        hashMap.put("postid", postid);
-        hashMap.put("ispost", true);
-
-        NotificationApi.REF_NOTIFICATIONS.push().setValue(hashMap);
-    }
-
-
-    private void editPost(final String postid){
+    private void editPost(final String postid) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
         alertDialog.setTitle("Edit Post");
 

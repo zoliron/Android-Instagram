@@ -13,6 +13,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+
 public class NotificationApi {
     public static DatabaseReference REF_NOTIFICATIONS = FirebaseDatabase.getInstance().getReference().child("Notifications");
 
@@ -38,5 +40,27 @@ public class NotificationApi {
 
             }
         });
+    }
+
+    // Likes Notifications
+    public static void addLikeNotifications(String userid, String postid) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("userid", UserApi.currentUser.getUid());
+        hashMap.put("text", "Liked your post");
+        hashMap.put("postid", postid);
+        hashMap.put("ispost", true);
+
+        REF_NOTIFICATIONS.push().setValue(hashMap);
+    }
+
+    // Follow Notifications
+    public static void addFollowNotifications(String userid){
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("userid", UserApi.currentUser.getUid());
+        hashMap.put("text", "started following you");
+        hashMap.put("postid", "");
+        hashMap.put("ispost", false);
+
+        REF_NOTIFICATIONS.child(userid).push().setValue(hashMap);
     }
 }

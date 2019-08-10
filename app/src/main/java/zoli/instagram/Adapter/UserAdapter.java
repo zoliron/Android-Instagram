@@ -16,18 +16,13 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import zoli.instagram.Api.FollowApi;
+import zoli.instagram.Api.NotificationApi;
+import zoli.instagram.Api.UserApi;
 import zoli.instagram.Fragments.ProfileFragment;
 import zoli.instagram.MainActivity;
 import zoli.instagram.Model.User;
@@ -36,14 +31,12 @@ import zoli.instagram.R;
 import static android.content.Context.MODE_PRIVATE;
 
 //After find the user - we will follow/unfollow him and update on the FB.
-
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ImageViewHolder> {
 
     private Context mContext;
     private List<User> mUsers;
     private boolean isFragment;
 
-    private FirebaseUser firebaseUser;
 
     public UserAdapter(Context context, List<User> users, boolean isFragment){
         mContext = context;
@@ -61,18 +54,17 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ImageViewHolde
     @Override
     public void onBindViewHolder(@NonNull final UserAdapter.ImageViewHolder holder, final int position) {
 
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         final User user = mUsers.get(position);
 
         holder.btn_follow.setVisibility(View.VISIBLE);
-        isFollowing(user.getId(), holder.btn_follow);
+        FollowApi.isFollowing(user.getId(), holder.btn_follow);
 
         holder.username.setText(user.getUsername());
         holder.fullname.setText(user.getFullname());
         Glide.with(mContext).load(user.getImageurl()).into(holder.image_profile);
 
-        if (user.getId().equals(firebaseUser.getUid())){
+        if (user.getId().equals(UserApi.currentUser.getUid())){
             holder.btn_follow.setVisibility(View.GONE);
         }
 
@@ -98,34 +90,23 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ImageViewHolde
             @Override
             public void onClick(View view) {
                 if (holder.btn_follow.getText().toString().equals("follow")) {
-                    FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid())
+                    FollowApi.REF_FOLLOW.child(UserApi.currentUser.getUid())
                             .child("following").child(user.getId()).setValue(true);
-                    FirebaseDatabase.getInstance().getReference().child("Follow").child(user.getId())
-                            .child("followers").child(firebaseUser.getUid()).setValue(true);
+                    FollowApi.REF_FOLLOW.child(user.getId())
+                            .child("followers").child(UserApi.currentUser.getUid()).setValue(true);
 
-                    addNotifications(user.getId());
+                    NotificationApi.addFollowNotifications(user.getId());
                 } else {
-                    FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid())
+                    FollowApi.REF_FOLLOW.child(UserApi.currentUser.getUid())
                             .child("following").child(user.getId()).removeValue();
-                    FirebaseDatabase.getInstance().getReference().child("Follow").child(user.getId())
-                            .child("followers").child(firebaseUser.getUid()).removeValue();
+                    FollowApi.REF_FOLLOW.child(user.getId())
+                            .child("followers").child(UserApi.currentUser.getUid()).removeValue();
                 }
             }
 
         });
     }
 
-    private void addNotifications(String userid){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(userid);
-
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("userid", firebaseUser.getUid());
-        hashMap.put("text", "started following you");
-        hashMap.put("postid", "");
-        hashMap.put("ispost", false);
-
-        reference.push().setValue(hashMap);
-    }
 
     @Override
     public int getItemCount() {
@@ -147,29 +128,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ImageViewHolde
             image_profile = itemView.findViewById(R.id.image_profile);
             btn_follow = itemView.findViewById(R.id.btn_follow);
         }
-    }
-
-    private void isFollowing(final String userid, final Button button){
-
-        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
-                .child("Follow").child(firebaseUser.getUid()).child("following");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(userid).exists()){
-                    button.setText("following");
-                } else{
-                    button.setText("follow");
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 }
 
