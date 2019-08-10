@@ -39,6 +39,7 @@ import zoli.instagram.EditProfileActivity;
 import zoli.instagram.FollowersActivity;
 import zoli.instagram.Model.Post;
 import zoli.instagram.Model.User;
+import zoli.instagram.OptionsActivity;
 import zoli.instagram.R;
 
 
@@ -145,6 +146,14 @@ public class ProfileFragment extends Fragment {
                     FirebaseDatabase.getInstance().getReference().child("Follow").child(profileid)
                             .child("followers").child(firebaseUser.getUid()).removeValue();
                 }
+            }
+        });
+
+        options.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), OptionsActivity.class);
+                startActivity(intent);
             }
         });
 
