@@ -29,7 +29,7 @@ import zoli.instagram.Model.User;
 import zoli.instagram.R;
 
 // Defines how the notifications will be seeing in the Recycler view
-public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ViewHolder> {
+public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ImageViewHolder> {
 
     private Context mContext;
     private List<Notification> mNotification;
@@ -41,13 +41,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.notification_item, parent, false);
-        return new NotificationAdapter.ViewHolder(view);
+        return new ImageViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
         final Notification notification = mNotification.get(position);
 
         holder.text.setText(notification.getText());
@@ -86,18 +86,18 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         return mNotification.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ImageViewHolder extends RecyclerView.ViewHolder{
 
         public ImageView image_profile, post_image;
         public TextView username, text;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
 
             image_profile = itemView.findViewById(R.id.image_profile);
             post_image = itemView.findViewById(R.id.post_image);
             username = itemView.findViewById(R.id.username);
-            text = itemView.findViewById(R.id.text);
+            text = itemView.findViewById(R.id.comment);
         }
     }
 
