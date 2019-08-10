@@ -38,8 +38,7 @@ public class NotificationFragment extends Fragment {
 
     // Inflate notification fragment to the reusable container
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notification, container, false);
 
         recyclerView = view.findViewById(R.id.recycler_view);
@@ -56,7 +55,6 @@ public class NotificationFragment extends Fragment {
     }
 
     private void readNotifications() {
-
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Notifications").child(firebaseUser.getUid());
         reference.addValueEventListener(new ValueEventListener() {
