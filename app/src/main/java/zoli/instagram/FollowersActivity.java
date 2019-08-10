@@ -79,14 +79,14 @@ public class FollowersActivity extends AppCompatActivity {
 
     }
 
-    private void getViews(){
+    private void getViews() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Story")
                 .child(id).child(getIntent().getStringExtra("storyid")).child("views");
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 idList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     idList.add(snapshot.getKey());
                 }
                 showUsers();
@@ -106,7 +106,7 @@ public class FollowersActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 idList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     idList.add(snapshot.getKey());
                 }
                 showUsers();
@@ -126,7 +126,7 @@ public class FollowersActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 idList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     idList.add(snapshot.getKey());
                 }
                 showUsers();
@@ -146,7 +146,7 @@ public class FollowersActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 idList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     idList.add(snapshot.getKey());
                 }
                 showUsers();
@@ -165,10 +165,10 @@ public class FollowersActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 userList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     User user = snapshot.getValue(User.class);
-                    for (String id : idList){
-                        if (user.getId().equals(id)){
+                    for (String id : idList) {
+                        if (user.getId().equals(id)) {
                             userList.add(user);
                         }
                     }
