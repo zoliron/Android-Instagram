@@ -12,20 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
 import java.util.List;
 
+import zoli.instagram.Api.PostApi;
+import zoli.instagram.Api.UserApi;
 import zoli.instagram.Fragments.PostDetailFragment;
 import zoli.instagram.Fragments.ProfileFragment;
 import zoli.instagram.Model.Notification;
-import zoli.instagram.Model.Post;
-import zoli.instagram.Model.User;
 import zoli.instagram.R;
 
 // Defines how the notifications will be seeing in the Recycler view
@@ -52,11 +45,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         holder.text.setText(notification.getText());
 
-        getUserInfo(holder.image_profile, holder.username, notification.getUserid());
+        UserApi.getUserInfo(holder.image_profile, holder.username, notification.getUserid(), mContext);
 
         if (notification.isPost()){
             holder.post_image.setVisibility(View.VISIBLE);
-            getPostImage(holder.post_image, notification.getPostid());
+            PostApi.getPostImage(holder.post_image, notification.getPostid(), mContext);
         } else {
             holder.post_image.setVisibility(View.GONE);
         }
@@ -99,38 +92,5 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             username = itemView.findViewById(R.id.username);
             text = itemView.findViewById(R.id.comment);
         }
-    }
-
-    private void getUserInfo(final ImageView imageView, final TextView username, String publisherId){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(publisherId);
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                Glide.with(mContext).load(user.getImageurl()).into(imageView);
-                username.setText(user.getUsername());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void getPostImage (final ImageView imageView, String postId){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts").child(postId);
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Post post = dataSnapshot.getValue(Post.class);
-                Glide.with(mContext).load(post.getPostimage()).into(imageView);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 }
