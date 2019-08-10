@@ -1,6 +1,7 @@
 package zoli.instagram.Api;
 
 import android.content.Context;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -90,5 +91,17 @@ public class NotificationApi {
 
             }
         });
+    }
+
+    // Creates notification when creating a comment
+    public static void addCommentNotifications(String publisherid, EditText addComment, String postid) {
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("userid", UserApi.currentUser.getUid());
+        hashMap.put("text", "Commented: " + addComment.getText().toString());
+        hashMap.put("postid", postid);
+        hashMap.put("ispost", true);
+
+        REF_NOTIFICATIONS.child(publisherid).push().setValue(hashMap);
     }
 }
