@@ -41,8 +41,6 @@
                    android:layout_alignParentEnd="true"
                    android:layout_marginEnd="10dp"/>
 
-
-
            </RelativeLayout>
 
        </androidx.appcompat.widget.Toolbar>
