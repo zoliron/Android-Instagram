@@ -47,16 +47,16 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ImageViewHolder holder, int position) {
         final Notification notification = mNotification.get(position);
 
         holder.text.setText(notification.getText());
 
-        getUserInfo(holder.image_profile, holder.username, notification.getUserId());
+        getUserInfo(holder.image_profile, holder.username, notification.getUserid());
 
         if (notification.isPost()){
             holder.post_image.setVisibility(View.VISIBLE);
-            getPostImage(holder.post_image, notification.getPostId());
+            getPostImage(holder.post_image, notification.getPostid());
         } else {
             holder.post_image.setVisibility(View.GONE);
         }
@@ -66,13 +66,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             public void onClick(View v) {
                 if (notification.isPost()){
                     SharedPreferences.Editor editor = mContext.getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit();
-                    editor.putString("postId", notification.getPostId());
+                    editor.putString("postid", notification.getPostid());
                     editor.apply();
 
                     ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new PostDetailFragment()).commit();
                 } else {
                     SharedPreferences.Editor editor = mContext.getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit();
-                    editor.putString("profileId", notification.getUserId());
+                    editor.putString("profileid", notification.getUserid());
                     editor.apply();
 
                     ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();

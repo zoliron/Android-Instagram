@@ -2,27 +2,27 @@ package zoli.instagram.Model;
 
 public class Notification {
 
-    private String userId;
+    private String userid;
     private String text;
-    private String postId;
+    private String postid;
     private boolean isPost;
 
-    public Notification(String userId, String text, String postId, boolean isPost) {
-        this.userId = userId;
+    public Notification(String userid, String text, String postid, boolean isPost) {
+        this.userid = userid;
         this.text = text;
-        this.postId = postId;
+        this.postid = postid;
         this.isPost = isPost;
     }
 
     public Notification() {
     }
 
-    public String getUserId() {
-        return userId;
+    public String getUserid() {
+        return userid;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUserid(String userid) {
+        this.userid = userid;
     }
 
     public String getText() {
@@ -33,12 +33,12 @@ public class Notification {
         this.text = text;
     }
 
-    public String getPostId() {
-        return postId;
+    public String getPostid() {
+        return postid;
     }
 
-    public void setPostId(String postId) {
-        this.postId = postId;
+    public void setPostid(String postid) {
+        this.postid = postid;
     }
 
     public boolean isPost() {
