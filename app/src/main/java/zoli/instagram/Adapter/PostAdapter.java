@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import zoli.instagram.CommentsActivity;
+import zoli.instagram.FollowersActivity;
 import zoli.instagram.Fragments.PostDetailFragment;
 import zoli.instagram.Fragments.ProfileFragment;
 import zoli.instagram.Model.Post;
@@ -165,6 +166,16 @@ public class PostAdapter  extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
                 Intent intent = new Intent(mContext, CommentsActivity.class);
                 intent.putExtra("postid", post.getPostid());
                 intent.putExtra("publisherid", post.getPublisher());
+                mContext.startActivity(intent);
+            }
+        });
+
+        holder.likes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, FollowersActivity.class);
+                intent.putExtra("id", post.getPostid());
+                intent.putExtra("title", "likes");
                 mContext.startActivity(intent);
             }
         });

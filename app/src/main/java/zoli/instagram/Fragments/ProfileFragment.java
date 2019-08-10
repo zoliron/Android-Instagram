@@ -36,6 +36,7 @@ import java.util.List;
 
 import zoli.instagram.Adapter.MyFotoAdapter;
 import zoli.instagram.EditProfileActivity;
+import zoli.instagram.FollowersActivity;
 import zoli.instagram.Model.Post;
 import zoli.instagram.Model.User;
 import zoli.instagram.R;
@@ -164,6 +165,28 @@ public class ProfileFragment extends Fragment {
             public void onClick(View view) {
                 recyclerView.setVisibility(View.GONE);
                 recyclerView_saves.setVisibility(View.VISIBLE); //the post is saved
+            }
+        });
+
+        // Gets the followers list
+        followers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), FollowersActivity.class);
+                intent.putExtra("id", profileid);
+                intent.putExtra("title", "followers");
+                startActivity(intent);
+            }
+        });
+
+        // Gets the following list
+        following.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), FollowersActivity.class);
+                intent.putExtra("id", profileid);
+                intent.putExtra("title", "following");
+                startActivity(intent);
             }
         });
 
