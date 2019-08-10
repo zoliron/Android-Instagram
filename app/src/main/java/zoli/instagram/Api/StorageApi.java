@@ -18,40 +18,38 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 
-import zoli.instagram.EditProfileActivity;
-
 public class StorageApi {
 
     public static StorageReference REF_STORAGE = FirebaseStorage.getInstance().getReference("uploads");
     private static StorageTask uploadTask;
 
     // Uploading image to Firebase Storage
-    public static void uploadImage(Context pdContext, final Context editProfileActivityContext, Uri mImageUri, String fileExtension){
+    public static void uploadImage(Context pdContext, final Context editProfileActivityContext, Uri mImageUri, String fileExtension) {
         final ProgressDialog pd = new ProgressDialog(pdContext);
         pd.setMessage("Uploading");
         pd.show();
 
-        if (mImageUri != null){
+        if (mImageUri != null) {
             final StorageReference fileReference = REF_STORAGE.child(System.currentTimeMillis() + "." + fileExtension);
 
             uploadTask = fileReference.putFile(mImageUri);
             uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
                 public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                    if (!task.isSuccessful()){
+                    if (!task.isSuccessful()) {
                         throw task.getException();
                     }
-                    return  fileReference.getDownloadUrl();
+                    return fileReference.getDownloadUrl();
                 }
             }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
                 public void onComplete(@NonNull Task<Uri> task) {
-                    if (task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         Uri downloadUri = task.getResult();
                         String myUrl = downloadUri.toString();
 
                         HashMap<String, Object> hashMap = new HashMap<>();
-                        hashMap.put("imageurl", ""+myUrl);
+                        hashMap.put("imageurl", "" + myUrl);
 
                         UserApi.REF_USERS.child(UserApi.currentUser.getUid()).updateChildren(hashMap);
                         pd.dismiss();

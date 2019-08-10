@@ -26,12 +26,12 @@ import zoli.instagram.Model.Notification;
 public class NotificationApi {
     public static DatabaseReference REF_NOTIFICATIONS = FirebaseDatabase.getInstance().getReference().child("Notifications");
 
-    public static void deleteNotifications(final String postid, String userid, final Context mContext){
+    public static void deleteNotifications(final String postid, String userid, final Context mContext) {
         REF_NOTIFICATIONS.child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    if (snapshot.child("postid").getValue().equals(postid)){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if (snapshot.child("postid").getValue().equals(postid)) {
                         snapshot.getRef().removeValue()
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
@@ -62,7 +62,7 @@ public class NotificationApi {
     }
 
     // Follow Notifications
-    public static void addFollowNotifications(String userid){
+    public static void addFollowNotifications(String userid) {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("userid", UserApi.currentUser.getUid());
         hashMap.put("text", "started following you");
@@ -77,8 +77,8 @@ public class NotificationApi {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 notificationList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    Notification notification =  snapshot.getValue(Notification.class);
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Notification notification = snapshot.getValue(Notification.class);
                     notificationList.add(notification);
                 }
 
