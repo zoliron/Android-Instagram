@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -17,9 +18,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
 import java.util.List;
 
 import zoli.instagram.Adapter.UserAdapter;
+import zoli.instagram.EditProfileActivity;
 import zoli.instagram.Model.User;
 
 public class UserApi {
@@ -130,5 +133,36 @@ public class UserApi {
 
             }
         });
+    }
+
+    public static void editProfile(final EditText fullname, final EditText username, final EditText bio, final Context mContext, final ImageView image_profile){
+        // Editing profile info according to user data
+        REF_USERS.child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                fullname.setText(user.getFullname());
+                username.setText(user.getUsername());
+                bio.setText(user.getBio());
+                Glide.with(mContext).load(user.getImageurl()).into(image_profile);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    // Updates the user data at Firebase Database
+    public static void updateProfile(String fullname, String username, String bio, Context editProfileContext) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("fullname", fullname);
+        hashMap.put("username", username);
+        hashMap.put("bio", bio);
+
+        REF_USERS.child(currentUser.getUid()).updateChildren(hashMap);
+
+        Toast.makeText(editProfileContext, "Successfully Updated", Toast.LENGTH_SHORT).show();
     }
 }
