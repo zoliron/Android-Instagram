@@ -7,13 +7,20 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+
+import zoli.instagram.Adapter.NotificationAdapter;
+import zoli.instagram.Model.Notification;
 
 public class NotificationApi {
     public static DatabaseReference REF_NOTIFICATIONS = FirebaseDatabase.getInstance().getReference().child("Notifications");
@@ -50,7 +57,7 @@ public class NotificationApi {
         hashMap.put("postid", postid);
         hashMap.put("ispost", true);
 
-        REF_NOTIFICATIONS.push().setValue(hashMap);
+        REF_NOTIFICATIONS.child(userid).push().setValue(hashMap);
     }
 
     // Follow Notifications
@@ -62,5 +69,26 @@ public class NotificationApi {
         hashMap.put("ispost", false);
 
         REF_NOTIFICATIONS.child(userid).push().setValue(hashMap);
+    }
+
+    public static void readNotifications(final List<Notification> notificationList, final NotificationAdapter notificationAdapter) {
+        REF_NOTIFICATIONS.child(UserApi.currentUser.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                notificationList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Notification notification =  snapshot.getValue(Notification.class);
+                    notificationList.add(notification);
+                }
+
+                Collections.reverse(notificationList);
+                notificationAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }
