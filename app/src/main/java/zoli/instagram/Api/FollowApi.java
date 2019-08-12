@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -45,7 +46,10 @@ public class FollowApi {
 
     public static void checkFollowing(final List<Post> postList, final PostAdapter postAdapter, final ProgressBar progressBar){
         followingList = new ArrayList<>();
-        REF_FOLLOW.child(UserApi.currentUser.getUid()).child("following").addValueEventListener(new ValueEventListener() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Follow")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("following");
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 followingList.clear();

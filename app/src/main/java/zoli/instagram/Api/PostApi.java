@@ -56,7 +56,7 @@ public class PostApi {
     }
 
     public static void readPosts(final List<String> followingList, final List<Post> postList, final PostAdapter postAdapter, final ProgressBar progressBar){
-        DatabaseReference reference =FirebaseDatabase.getInstance().getReference("Posts");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

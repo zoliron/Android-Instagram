@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
                     pd.dismiss();
                     Toast.makeText(LoginActivity.this, "All fields are required", Toast.LENGTH_SHORT).show();
                 } else {
-                    UserApi.loginUser(pd, str_email, str_password, LoginActivity.this);
+                    UserApi.loginUser(pd, str_email, str_password, LoginActivity.this, LoginActivity.this);
                 }
             }
         });

@@ -31,6 +31,7 @@ import zoli.instagram.Adapter.UserAdapter;
 import zoli.instagram.LoginActivity;
 import zoli.instagram.MainActivity;
 import zoli.instagram.Model.User;
+import zoli.instagram.RegisterActivity;
 
 public class UserApi {
 
@@ -198,14 +199,13 @@ public class UserApi {
         });
     }
 
-    public static void loginUser(final ProgressDialog pd, String str_email, String str_password, final Context loginActivityContext) {
+    public static void loginUser(final ProgressDialog pd, String str_email, String str_password, final Activity loginActivity, final Context loginActivityContext) {
         // SignIn using Firebase Authentication
-        firebaseAuth.signInWithEmailAndPassword(str_email, str_password).addOnCompleteListener((Activity) loginActivityContext, new OnCompleteListener<AuthResult>() {
+        firebaseAuth.signInWithEmailAndPassword(str_email, str_password).addOnCompleteListener(loginActivity, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users")
-                            .child(firebaseAuth.getCurrentUser().getUid());
+                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid());
                     reference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -213,7 +213,7 @@ public class UserApi {
                             Intent intent = new Intent(loginActivityContext, MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             loginActivityContext.startActivity(intent);
-                            ((Activity)loginActivityContext).finish();
+                            loginActivity.finish();
                         }
 
                         @Override
@@ -228,5 +228,44 @@ public class UserApi {
                 }
             }
         });
+    }
+
+    // Creating new user in Firebase Authentication and store his/her information in Firebase Database
+    public static void register(final ProgressDialog pd, final String username, final String fullname, final String email, String password, final Activity registerActivity, final Context registerActivityContext){
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(registerActivity, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()){
+                            FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                            String userID = firebaseUser.getUid();
+
+                            DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users").child(userID);
+
+                            HashMap<String, Object> hashMap = new HashMap<>();
+                            hashMap.put("id", userID);
+                            hashMap.put("username", username);
+                            hashMap.put("fullname", fullname);
+                            hashMap.put("bio", "");
+                            hashMap.put("email", email);
+                            hashMap.put("imageurl", "https://firebasestorage.googleapis.com/v0/b/android-instagram-89c73.appspot.com/o/placeholder.png?alt=media&token=d5425fe4-9252-492f-8b69-44c81da0c754");
+
+                            reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()){
+                                        pd.dismiss();
+                                        Intent intent = new Intent(registerActivityContext, MainActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        registerActivity.startActivity(intent);
+                                    }
+                                }
+                            });
+                        } else {
+                            pd.dismiss();
+                            Toast.makeText(registerActivityContext, "You can't register with this email or password", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 }
