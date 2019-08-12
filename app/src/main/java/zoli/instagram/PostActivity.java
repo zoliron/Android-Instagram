@@ -1,9 +1,5 @@
 package zoli.instagram;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
@@ -15,26 +11,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.StorageTask;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.theartofdev.edmodo.cropper.CropImage;
 
-import java.util.HashMap;
+import zoli.instagram.Api.StorageApi;
 
 public class PostActivity extends AppCompatActivity {
 
     Uri imageUri;
-    String myUrl= "";
-    StorageTask uploadTask;
-    StorageReference storageReference;
 
     ImageView close, image_added;
     TextView post;
@@ -46,19 +31,16 @@ public class PostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
-        close= findViewById(R.id.close);
-        image_added= findViewById(R.id.image_added);
-        post= findViewById(R.id.post);
-        description= findViewById(R.id.description);
-
-
-        storageReference =FirebaseStorage.getInstance().getReference("posts");
+        close = findViewById(R.id.close);
+        image_added = findViewById(R.id.image_added);
+        post = findViewById(R.id.post);
+        description = findViewById(R.id.description);
 
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    startActivity(new Intent(PostActivity.this, MainActivity.class));
-                    finish();
+                startActivity(new Intent(PostActivity.this, MainActivity.class));
+                finish();
             }
         });
 
@@ -66,90 +48,27 @@ public class PostActivity extends AppCompatActivity {
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                uploadImage();
-
+                StorageApi.uploadPostImage(PostActivity.this, imageUri, getFileExtension(imageUri), description);
             }
         });
 
         CropImage.activity()
-                .setAspectRatio(1,1)
+                .setAspectRatio(1, 1)
                 .start(PostActivity.this);
     }
 
-    private String getFileExtension(Uri uri){
+    private String getFileExtension(Uri uri) {
         ContentResolver contentResolver = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return  mime.getExtensionFromMimeType(contentResolver.getType(uri));
-    }
-
-    //Edge cases when posting a photo
-
-    private void uploadImage(){
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Posting");
-        progressDialog.show();
-
-        if(imageUri != null){
-            final StorageReference filereference = storageReference.child(System.currentTimeMillis()
-            + "."+ getFileExtension(imageUri));
-
-            uploadTask = filereference.putFile(imageUri);
-            uploadTask.continueWithTask(new Continuation() {
-                @Override
-                public Object then(@NonNull Task task) throws Exception {
-                    if (!task.isComplete()){  //if the task was not successful
-                        throw  task.getException();
-                    }
-
-                    return  filereference.getDownloadUrl();
-                }
-            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    if (task.isSuccessful()){
-                        Uri downloadUri = task.getResult();
-                        myUrl = downloadUri.toString();
-
-                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
-
-                        String postid = reference.push().getKey();
-
-                        HashMap<String, Object> hashMap = new HashMap<>();
-                        hashMap.put("postid",postid);
-                        hashMap.put("postimage",myUrl);
-                        hashMap.put("description",description.getText().toString());
-                        hashMap.put("publisher", FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-                        reference.child(postid).setValue(hashMap);
-
-                        progressDialog.dismiss();
-
-                        startActivity(new Intent(PostActivity.this, MainActivity.class));
-                        finish();
-
-                    } else {
-
-                        Toast.makeText(PostActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(PostActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-        } else {
-            Toast.makeText(this, "No Image Selected!", Toast.LENGTH_SHORT).show();
-        }
+        return mime.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode  == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK){
-            CropImage.ActivityResult result= CropImage.getActivityResult(data);
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
             imageUri = result.getUri();
 
             image_added.setImageURI(imageUri);
