@@ -1,6 +1,9 @@
 package zoli.instagram.Api;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -9,6 +12,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -22,6 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import zoli.instagram.Adapter.UserAdapter;
+import zoli.instagram.LoginActivity;
+import zoli.instagram.MainActivity;
 import zoli.instagram.Model.User;
 
 public class UserApi {
@@ -30,7 +38,7 @@ public class UserApi {
     public static FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     public static DatabaseReference REF_USERS = FirebaseDatabase.getInstance().getReference().child("Users");
 
-    public static void getUserInfo(final ImageView imageView, final TextView username, String publisherid, final Context mContext){
+    public static void getUserInfo(final ImageView imageView, final TextView username, String publisherid, final Context mContext) {
         REF_USERS.child(publisherid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -87,17 +95,17 @@ public class UserApi {
         });
     }
 
-    public static void searchUsers(String s, final List<User> mUsers, final UserAdapter userAdapter){
+    public static void searchUsers(String s, final List<User> mUsers, final UserAdapter userAdapter) {
         Query query = FirebaseDatabase.getInstance().getReference("Users").orderByChild("username")
                 .startAt(s)
-                .endAt(s+"\uf8ff");
+                .endAt(s + "\uf8ff");
 
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mUsers.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    User user= snapshot.getValue(User.class);
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    User user = snapshot.getValue(User.class);
                     mUsers.add(user);
                 }
 
@@ -112,15 +120,15 @@ public class UserApi {
 
     }
 
-    public static void readUsers(final EditText search_bar, final List<User> mUsers, final UserAdapter userAdapter){
+    public static void readUsers(final EditText search_bar, final List<User> mUsers, final UserAdapter userAdapter) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (search_bar.getText().toString().equals("")){
+                if (search_bar.getText().toString().equals("")) {
                     mUsers.clear();
-                    for (DataSnapshot snapshot: dataSnapshot.getChildren()){
-                        User user= snapshot.getValue(User.class);
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        User user = snapshot.getValue(User.class);
                         mUsers.add(user);
                     }
 
@@ -135,7 +143,7 @@ public class UserApi {
         });
     }
 
-    public static void editProfile(final EditText fullname, final EditText username, final EditText bio, final Context mContext, final ImageView image_profile){
+    public static void editProfile(final EditText fullname, final EditText username, final EditText bio, final Context mContext, final ImageView image_profile) {
         // Editing profile info according to user data
         REF_USERS.child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -186,6 +194,38 @@ public class UserApi {
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
+            }
+        });
+    }
+
+    public static void loginUser(final ProgressDialog pd, String str_email, String str_password, final Context loginActivityContext) {
+        // SignIn using Firebase Authentication
+        firebaseAuth.signInWithEmailAndPassword(str_email, str_password).addOnCompleteListener((Activity) loginActivityContext, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users")
+                            .child(firebaseAuth.getCurrentUser().getUid());
+                    reference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            pd.dismiss();
+                            Intent intent = new Intent(loginActivityContext, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            loginActivityContext.startActivity(intent);
+                            ((Activity)loginActivityContext).finish();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            pd.dismiss();
+                        }
+                    });
+                } else {
+                    // Raise error if authentication fails
+                    pd.dismiss();
+                    Toast.makeText(loginActivityContext, "Authentication failed", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
