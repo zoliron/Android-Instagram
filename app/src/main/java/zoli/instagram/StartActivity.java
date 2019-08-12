@@ -7,23 +7,19 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import zoli.instagram.Api.UserApi;
 
 public class StartActivity extends AppCompatActivity {
 
     Button login, register;
 
-    FirebaseUser firebaseUser;
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
         // redirect if user is not null
-        if (firebaseUser != null){
+        if (UserApi.currentUser != null){
             startActivity(new Intent(StartActivity.this, MainActivity.class));
             finish();
         }
