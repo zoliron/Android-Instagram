@@ -26,6 +26,7 @@ import zoli.instagram.Model.User;
 
 public class UserApi {
 
+    public static FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     public static FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     public static DatabaseReference REF_USERS = FirebaseDatabase.getInstance().getReference().child("Users");
 

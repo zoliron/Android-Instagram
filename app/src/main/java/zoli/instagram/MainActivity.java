@@ -10,8 +10,8 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 
+import zoli.instagram.Api.UserApi;
 import zoli.instagram.Fragments.HomeFragment;
 import zoli.instagram.Fragments.NotificationFragment;
 import zoli.instagram.Fragments.ProfileFragment;
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.nav_profile:
                     SharedPreferences.Editor editor = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
-                    editor.putString("profileid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    editor.putString("profileid", UserApi.currentUser.getUid());
                     editor.apply();
                     selectedFragment = new ProfileFragment();
                     break;
