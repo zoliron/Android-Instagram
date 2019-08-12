@@ -1,8 +1,5 @@
 package zoli.instagram;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,15 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.HashMap;
+import androidx.appcompat.app.AppCompatActivity;
 
 import zoli.instagram.Api.UserApi;
 
@@ -31,8 +20,6 @@ public class RegisterActivity extends AppCompatActivity {
     Button register;
     TextView txt_login;
 
-    FirebaseAuth auth;
-    DatabaseReference reference;
     ProgressDialog pd;
 
     @Override
@@ -46,8 +33,6 @@ public class RegisterActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         register = findViewById(R.id.register);
         txt_login = findViewById(R.id.txt_login);
-
-        auth = FirebaseAuth.getInstance();
 
         // Listens when login is clicked and changes view from RegisterActivity to LoginActivity
         txt_login.setOnClickListener(new View.OnClickListener() {
