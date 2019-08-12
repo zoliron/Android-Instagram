@@ -11,6 +11,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.List;
+
+import zoli.instagram.Adapter.UserAdapter;
+import zoli.instagram.Model.User;
 import zoli.instagram.R;
 
 public class LikeApi {
@@ -48,6 +52,24 @@ public class LikeApi {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public static void getLikes(String id, final List<String> idList, final List<User> userList, final UserAdapter userAdapter) {
+        REF_LIKES.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                idList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    idList.add(snapshot.getKey());
+                }
+                UserApi.showUsers(idList, userList, userAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });

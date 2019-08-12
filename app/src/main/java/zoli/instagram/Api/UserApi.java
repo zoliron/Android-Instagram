@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import zoli.instagram.Adapter.UserAdapter;
-import zoli.instagram.EditProfileActivity;
 import zoli.instagram.Model.User;
 
 public class UserApi {
@@ -164,5 +163,29 @@ public class UserApi {
         REF_USERS.child(currentUser.getUid()).updateChildren(hashMap);
 
         Toast.makeText(editProfileContext, "Successfully Updated", Toast.LENGTH_SHORT).show();
+    }
+
+    public static void showUsers(final List<String> idList, final List<User> userList, final UserAdapter userAdapter) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    User user = snapshot.getValue(User.class);
+                    for (String id : idList) {
+                        if (user.getId().equals(id)) {
+                            userList.add(user);
+                        }
+                    }
+                }
+                userAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

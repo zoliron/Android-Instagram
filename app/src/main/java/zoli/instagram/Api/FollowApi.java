@@ -17,7 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import zoli.instagram.Adapter.PostAdapter;
+import zoli.instagram.Adapter.UserAdapter;
 import zoli.instagram.Model.Post;
+import zoli.instagram.Model.User;
 
 public class FollowApi {
     public static DatabaseReference REF_FOLLOW = FirebaseDatabase.getInstance().getReference("Follow");
@@ -101,6 +103,42 @@ public class FollowApi {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public static void getFollowers(String id, final List<String> idList, final List<User> userList, final UserAdapter userAdapter) {
+        REF_FOLLOW.child(id).child("followers").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                idList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    idList.add(snapshot.getKey());
+                }
+                UserApi.showUsers(idList, userList, userAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public static void getFollowing(String id, final List<String> idList, final List<User> userList, final UserAdapter userAdapter) {
+        REF_FOLLOW.child(id).child("following").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                idList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    idList.add(snapshot.getKey());
+                }
+                UserApi.showUsers(idList, userList, userAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });

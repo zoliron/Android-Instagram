@@ -95,7 +95,6 @@ public class NotificationApi {
 
     // Creates notification when creating a comment
     public static void addCommentNotifications(String publisherid, EditText addComment, String postid) {
-
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("userid", UserApi.currentUser.getUid());
         hashMap.put("text", "Commented: " + addComment.getText().toString());
