@@ -28,18 +28,34 @@ import java.util.HashMap;
 import java.util.List;
 
 import zoli.instagram.Adapter.UserAdapter;
-import zoli.instagram.LoginActivity;
 import zoli.instagram.MainActivity;
 import zoli.instagram.Model.User;
-import zoli.instagram.RegisterActivity;
 
 public class UserApi {
 
     public static FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     public static FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-    public static DatabaseReference REF_USERS = FirebaseDatabase.getInstance().getReference().child("Users");
+    public static DatabaseReference REF_USERS = FirebaseDatabase.getInstance().getReference("Users");
+    public static DatabaseReference REF_CHILD_USERS = FirebaseDatabase.getInstance().getReference().child("Users");
+
 
     public static void getUserInfo(final ImageView imageView, final TextView username, String publisherid, final Context mContext) {
+        REF_CHILD_USERS.child(publisherid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                Glide.with(mContext).load(user.getImageurl()).into(imageView);
+                username.setText(user.getUsername());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public static void getNotificationUserInfo(final ImageView imageView, final TextView username, String publisherid, final Context mContext) {
         REF_USERS.child(publisherid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -97,7 +113,7 @@ public class UserApi {
     }
 
     public static void searchUsers(String s, final List<User> mUsers, final UserAdapter userAdapter) {
-        Query query = FirebaseDatabase.getInstance().getReference("Users").orderByChild("username")
+        Query query = REF_USERS.orderByChild("username")
                 .startAt(s)
                 .endAt(s + "\uf8ff");
 
@@ -122,8 +138,7 @@ public class UserApi {
     }
 
     public static void readUsers(final EditText search_bar, final List<User> mUsers, final UserAdapter userAdapter) {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.addValueEventListener(new ValueEventListener() {
+        REF_USERS.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (search_bar.getText().toString().equals("")) {
@@ -176,8 +191,7 @@ public class UserApi {
     }
 
     public static void showUsers(final List<String> idList, final List<User> userList, final UserAdapter userAdapter) {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+        REF_USERS.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 userList.clear();
@@ -231,12 +245,12 @@ public class UserApi {
     }
 
     // Creating new user in Firebase Authentication and store his/her information in Firebase Database
-    public static void register(final ProgressDialog pd, final String username, final String fullname, final String email, String password, final Activity registerActivity, final Context registerActivityContext){
+    public static void register(final ProgressDialog pd, final String username, final String fullname, final String email, String password, final Activity registerActivity, final Context registerActivityContext) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(registerActivity, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                             String userID = firebaseUser.getUid();
 
@@ -253,7 +267,7 @@ public class UserApi {
                             reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()){
+                                    if (task.isSuccessful()) {
                                         pd.dismiss();
                                         Intent intent = new Intent(registerActivityContext, MainActivity.class);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

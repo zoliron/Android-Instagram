@@ -45,7 +45,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         holder.text.setText(notification.getText());
 
-        UserApi.getUserInfo(holder.image_profile, holder.username, notification.getUserid(), mContext);
+        UserApi.getNotificationUserInfo(holder.image_profile, holder.username, notification.getUserid(), mContext);
 
         if (notification.isPost()){
             holder.post_image.setVisibility(View.VISIBLE);

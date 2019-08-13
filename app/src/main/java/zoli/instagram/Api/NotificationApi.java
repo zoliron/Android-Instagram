@@ -8,8 +8,6 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,7 +22,8 @@ import zoli.instagram.Adapter.NotificationAdapter;
 import zoli.instagram.Model.Notification;
 
 public class NotificationApi {
-    public static DatabaseReference REF_NOTIFICATIONS = FirebaseDatabase.getInstance().getReference().child("Notifications");
+    public static DatabaseReference REF_NOTIFICATIONS = FirebaseDatabase.getInstance().getReference("Notifications");
+    public static DatabaseReference REF_CHILD_NOTIFICATIONS = FirebaseDatabase.getInstance().getReference().child("Notifications");
 
     public static void deleteNotifications(final String postid, String userid, final Context mContext) {
         REF_NOTIFICATIONS.child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -65,7 +64,7 @@ public class NotificationApi {
     public static void addFollowNotifications(String userid) {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("userid", UserApi.currentUser.getUid());
-        hashMap.put("text", "started following you");
+        hashMap.put("text", "Started following you");
         hashMap.put("postid", "");
         hashMap.put("ispost", false);
 
@@ -73,7 +72,7 @@ public class NotificationApi {
     }
 
     public static void readNotifications(final List<Notification> notificationList, final NotificationAdapter notificationAdapter) {
-        REF_NOTIFICATIONS.child(UserApi.currentUser.getUid()).addValueEventListener(new ValueEventListener() {
+        REF_CHILD_NOTIFICATIONS.child(UserApi.currentUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 notificationList.clear();

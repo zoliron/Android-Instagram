@@ -20,11 +20,12 @@ import zoli.instagram.R;
 public class SaveApi {
 
     public static DatabaseReference REF_SAVES = FirebaseDatabase.getInstance().getReference("Saves");
+    public static DatabaseReference REF_CHILD_SAVES = FirebaseDatabase.getInstance().getReference().child("Saves");
     private static List<String> mySaves;
 
 
     public static void isSaved(final String postid, final ImageView imageView) {
-        REF_SAVES.child(UserApi.currentUser.getUid()).addValueEventListener(new ValueEventListener() {
+        REF_CHILD_SAVES.child(UserApi.currentUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) { //set the save icone and add him the tag 'saved'
                 if (dataSnapshot.child(postid).exists()) {

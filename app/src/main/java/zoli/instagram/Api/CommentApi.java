@@ -24,9 +24,10 @@ import zoli.instagram.Model.User;
 public class CommentApi {
 
     public static DatabaseReference REF_COMMENTS = FirebaseDatabase.getInstance().getReference("Comments");
+    public static DatabaseReference REF_CHILD_COMMENTS = FirebaseDatabase.getInstance().getReference().child("Comments");
 
     public static void getComments(String postid, final TextView comments) {
-        REF_COMMENTS.child(postid).addValueEventListener(new ValueEventListener() {
+        REF_CHILD_COMMENTS.child(postid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 comments.setText("View All " + dataSnapshot.getChildrenCount() + " Comments"); //add this line under every post that keep count the numbers of comments

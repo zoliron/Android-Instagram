@@ -24,10 +24,11 @@ import zoli.instagram.Adapter.PostAdapter;
 import zoli.instagram.Model.Post;
 
 public class PostApi {
-    public static DatabaseReference REF_POSTS = FirebaseDatabase.getInstance().getReference().child("Posts");
+    public static DatabaseReference REF_POSTS = FirebaseDatabase.getInstance().getReference("Posts");
+    public static DatabaseReference REF_CHILD_POSTS = FirebaseDatabase.getInstance().getReference().child("Posts");
 
     public static void getPostImage (final ImageView imageView, String postId, final Context mContext){
-        REF_POSTS.child(postId).addValueEventListener(new ValueEventListener() {
+        REF_CHILD_POSTS.child(postId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Post post = dataSnapshot.getValue(Post.class);
@@ -56,8 +57,7 @@ public class PostApi {
     }
 
     public static void readPosts(final List<String> followingList, final List<Post> postList, final PostAdapter postAdapter, final ProgressBar progressBar){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
-        reference.addValueEventListener(new ValueEventListener() {
+        REF_POSTS.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 postList.clear();
@@ -82,7 +82,7 @@ public class PostApi {
     }
 
     public static void readPost(String postid, final List<Post> postList, final PostAdapter postAdapter) {
-        PostApi.REF_POSTS.child(postid).addValueEventListener(new ValueEventListener() {
+        REF_POSTS.child(postid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 postList.clear();
@@ -100,7 +100,7 @@ public class PostApi {
     }
 
     public static void getNrPosts(final String profileid, final TextView posts) {
-        PostApi.REF_POSTS.addValueEventListener(new ValueEventListener() {
+        REF_POSTS.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -125,7 +125,7 @@ public class PostApi {
 
     //Add the posts to FB
     public static void myFotos(final List<Post> postList, final String profileid, final MyFotoAdapter myFotoAdapter) {
-        PostApi.REF_POSTS.addValueEventListener(new ValueEventListener() {
+        REF_POSTS.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 postList.clear();

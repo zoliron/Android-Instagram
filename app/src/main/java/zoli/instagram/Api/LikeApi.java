@@ -18,12 +18,13 @@ import zoli.instagram.Model.User;
 import zoli.instagram.R;
 
 public class LikeApi {
-    public static DatabaseReference REF_LIKES = FirebaseDatabase.getInstance().getReference().child("Likes");
+    public static DatabaseReference REF_LIKES = FirebaseDatabase.getInstance().getReference("Likes");
+    public static DatabaseReference REF_CHILD_LIKES = FirebaseDatabase.getInstance().getReference().child("Likes");
 
     //Make possible to users to like a post
     public static void isLikes(String postid, final ImageView imageView) {
         //change the image like
-        REF_LIKES.child(postid).addValueEventListener(new ValueEventListener() {
+        REF_CHILD_LIKES.child(postid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child(UserApi.currentUser.getUid()).exists()) {
@@ -44,7 +45,7 @@ public class LikeApi {
 
     //Get numbers of likes
     public static void nrLikes(final TextView likes, String postid) {
-        REF_LIKES.child(postid).addValueEventListener(new ValueEventListener() {
+        REF_CHILD_LIKES.child(postid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 likes.setText(dataSnapshot.getChildrenCount() + " likes");

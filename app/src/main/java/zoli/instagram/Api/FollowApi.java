@@ -24,10 +24,11 @@ import zoli.instagram.Model.User;
 
 public class FollowApi {
     public static DatabaseReference REF_FOLLOW = FirebaseDatabase.getInstance().getReference("Follow");
+    public static DatabaseReference REF_CHILD_FOLLOW = FirebaseDatabase.getInstance().getReference().child("Follow");
     private static List<String> followingList;
 
     public static void isFollowing(final String userid, final Button button){
-        REF_FOLLOW.child(UserApi.currentUser.getUid()).child("following").addValueEventListener(new ValueEventListener() {
+        REF_CHILD_FOLLOW.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("following").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child(userid).exists()){
@@ -46,10 +47,7 @@ public class FollowApi {
 
     public static void checkFollowing(final List<Post> postList, final PostAdapter postAdapter, final ProgressBar progressBar){
         followingList = new ArrayList<>();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Follow")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child("following");
-        reference.addValueEventListener(new ValueEventListener() {
+        REF_FOLLOW.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("following").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 followingList.clear();
@@ -68,7 +66,7 @@ public class FollowApi {
     }
 
     public static void checkFollow(final String profileid, final Button edit_profile) {
-        FollowApi.REF_FOLLOW.child(UserApi.currentUser.getUid()).child("following").addValueEventListener(new ValueEventListener() {
+        REF_CHILD_FOLLOW.child(UserApi.currentUser.getUid()).child("following").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child(profileid).exists()) {  //if the user exist under "following" put the tag 'following' on his profile if not 'follow' tag
@@ -86,7 +84,7 @@ public class FollowApi {
     }
 
     public static void getFollowers(String profileid, final TextView followers, final TextView following) { // get the data of the follower
-        FollowApi.REF_FOLLOW.child(profileid).child("followers").addValueEventListener(new ValueEventListener() {
+        REF_CHILD_FOLLOW.child(profileid).child("followers").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 followers.setText("" + dataSnapshot.getChildrenCount());
@@ -99,7 +97,7 @@ public class FollowApi {
         });
 
         // get the data of the following
-        FollowApi.REF_FOLLOW.child(profileid).child("following").addValueEventListener(new ValueEventListener() {
+        REF_CHILD_FOLLOW.child(profileid).child("following").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 following.setText("" + dataSnapshot.getChildrenCount());
