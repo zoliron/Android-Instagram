@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import zoli.instagram.Adapter.MyFotoAdapter;
+import zoli.instagram.Adapter.MyPhotoAdapter;
 import zoli.instagram.Api.FollowApi;
 import zoli.instagram.Api.PostApi;
 import zoli.instagram.Api.SaveApi;
@@ -64,25 +64,25 @@ public class ProfileFragment extends Fragment {
         TextView bio = view.findViewById(R.id.bio);
         TextView username = view.findViewById(R.id.username);
         edit_profile = view.findViewById(R.id.edit_profile);
-        ImageButton my_fotos = view.findViewById(R.id.my_fotos);
-        ImageButton saved_fotos = view.findViewById(R.id.saved_fotos);
+        ImageButton my_photos = view.findViewById(R.id.my_photos);
+        ImageButton saved_photos = view.findViewById(R.id.saved_photos);
 
-        //Related to MyFotoAdapter
+        //Related to MyPhotoAdapter
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new GridLayoutManager(getContext(), 3);
         recyclerView.setLayoutManager(linearLayoutManager);
         List<Post> postList = new ArrayList<>();
-        MyFotoAdapter myFotoAdapter = new MyFotoAdapter(getContext(), postList);
-        recyclerView.setAdapter(myFotoAdapter);
+        MyPhotoAdapter myPhotoAdapter = new MyPhotoAdapter(getContext(), postList);
+        recyclerView.setAdapter(myPhotoAdapter);
 
         recyclerView_saves = view.findViewById(R.id.recycler_view_save);
         recyclerView_saves.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager_saves = new GridLayoutManager(getContext(), 3);
         recyclerView_saves.setLayoutManager(linearLayoutManager_saves);
         List<Post> postList_saves = new ArrayList<>();
-        MyFotoAdapter myFotoAdapter_saves = new MyFotoAdapter(getContext(), postList_saves);
-        recyclerView_saves.setAdapter(myFotoAdapter_saves);
+        MyPhotoAdapter myPhotoAdapter_saves = new MyPhotoAdapter(getContext(), postList_saves);
+        recyclerView_saves.setAdapter(myPhotoAdapter_saves);
 
         recyclerView.setVisibility(View.VISIBLE);
         recyclerView_saves.setVisibility(View.GONE);
@@ -91,14 +91,14 @@ public class ProfileFragment extends Fragment {
         UserApi.userInfo(profileid, getContext(), image_profile, username, fullname, bio);
         FollowApi.getFollowers(profileid, followers, following); //to update the numbers of the followers in the profile data bar
         PostApi.getNrPosts(profileid, posts);
-        PostApi.myFotos(postList, profileid, myFotoAdapter);
-        SaveApi.mySaves(postList_saves, myFotoAdapter_saves);
+        PostApi.myPhotos(postList, profileid, myPhotoAdapter);
+        SaveApi.mySaves(postList_saves, myPhotoAdapter_saves);
 
         if (profileid.equals(UserApi.currentUser.getUid())) {
             edit_profile.setText("Edit Profile");
         } else {
             FollowApi.checkFollow(profileid, edit_profile);
-            saved_fotos.setVisibility(View.GONE);
+            saved_photos.setVisibility(View.GONE);
         }
 
         edit_profile.setOnClickListener(new View.OnClickListener() {
@@ -133,7 +133,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        my_fotos.setOnClickListener(new View.OnClickListener() {
+        my_photos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -143,7 +143,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        saved_fotos.setOnClickListener(new View.OnClickListener() {
+        saved_photos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 recyclerView.setVisibility(View.GONE);

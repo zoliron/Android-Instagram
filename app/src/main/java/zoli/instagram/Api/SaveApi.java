@@ -13,7 +13,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import zoli.instagram.Adapter.MyFotoAdapter;
+import zoli.instagram.Adapter.MyPhotoAdapter;
 import zoli.instagram.Model.Post;
 import zoli.instagram.R;
 
@@ -45,7 +45,7 @@ public class SaveApi {
     }
 
     //present the saved post on my profile under the save icon
-    public static void mySaves(final List<Post> postList_saves, final MyFotoAdapter myFotoAdapter_saves) {
+    public static void mySaves(final List<Post> postList_saves, final MyPhotoAdapter myPhotoAdapter_saves) {
         mySaves = new ArrayList<>();
         REF_SAVES.child(UserApi.currentUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -54,7 +54,7 @@ public class SaveApi {
                     mySaves.add(snapshot.getKey());
                 }
 
-                readSaves(postList_saves, myFotoAdapter_saves); // update the data of the saved posts
+                readSaves(postList_saves, myPhotoAdapter_saves); // update the data of the saved posts
             }
 
             @Override
@@ -64,7 +64,7 @@ public class SaveApi {
         });
     }
 
-    public static void readSaves(final List<Post> postList_saves, final MyFotoAdapter myFotoAdapter_saves) {
+    public static void readSaves(final List<Post> postList_saves, final MyPhotoAdapter myPhotoAdapter_saves) {
         PostApi.REF_POSTS.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -80,7 +80,7 @@ public class SaveApi {
                     }
                 }
 
-                myFotoAdapter_saves.notifyDataSetChanged();
+                myPhotoAdapter_saves.notifyDataSetChanged();
             }
 
             @Override

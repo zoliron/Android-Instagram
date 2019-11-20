@@ -19,7 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Collections;
 import java.util.List;
 
-import zoli.instagram.Adapter.MyFotoAdapter;
+import zoli.instagram.Adapter.MyPhotoAdapter;
 import zoli.instagram.Adapter.PostAdapter;
 import zoli.instagram.Model.Post;
 
@@ -124,7 +124,7 @@ public class PostApi {
     }
 
     //Add the posts to FB
-    public static void myFotos(final List<Post> postList, final String profileid, final MyFotoAdapter myFotoAdapter) {
+    public static void myPhotos(final List<Post> postList, final String profileid, final MyPhotoAdapter myPhotoAdapter) {
         REF_POSTS.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -136,7 +136,7 @@ public class PostApi {
                     }
                 }
                 Collections.reverse(postList);
-                myFotoAdapter.notifyDataSetChanged();
+                myPhotoAdapter.notifyDataSetChanged();
             }
 
             @Override
