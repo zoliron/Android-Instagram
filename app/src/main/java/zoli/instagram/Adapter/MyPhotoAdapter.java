@@ -21,12 +21,12 @@ import zoli.instagram.R;
 
 
 //Show user posts in profile
-public class MyFotoAdapter extends RecyclerView.Adapter<MyFotoAdapter.ViewHolder> {
+public class MyPhotoAdapter extends RecyclerView.Adapter<MyPhotoAdapter.ViewHolder> {
 
     private Context context;
     private List<Post> mPosts;
 
-    public MyFotoAdapter(Context context, List<Post> mPosts) {
+    public MyPhotoAdapter(Context context, List<Post> mPosts) {
         this.context = context;
         this.mPosts = mPosts;
     }
@@ -34,8 +34,8 @@ public class MyFotoAdapter extends RecyclerView.Adapter<MyFotoAdapter.ViewHolder
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.fotos_item, parent, false);
-        return new MyFotoAdapter.ViewHolder(view);
+        View view = LayoutInflater.from(context).inflate(R.layout.photos_item, parent, false);
+        return new MyPhotoAdapter.ViewHolder(view);
     }
 
     @Override
