@@ -47,7 +47,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         UserApi.getNotificationUserInfo(holder.image_profile, holder.username, notification.getUserid(), mContext);
 
-        if (notification.isPost()){
+        if (notification.isPost()) {
             holder.post_image.setVisibility(View.VISIBLE);
             PostApi.getPostImage(holder.post_image, notification.getPostid(), mContext);
         } else {
@@ -57,18 +57,18 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (notification.isPost()){
+                if (notification.isPost()) {
                     SharedPreferences.Editor editor = mContext.getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit();
                     editor.putString("postid", notification.getPostid());
                     editor.apply();
 
-                    ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new PostDetailFragment()).commit();
+                    ((FragmentActivity) mContext).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new PostDetailFragment()).commit();
                 } else {
                     SharedPreferences.Editor editor = mContext.getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit();
                     editor.putString("profileid", notification.getUserid());
                     editor.apply();
 
-                    ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
+                    ((FragmentActivity) mContext).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
                 }
             }
         });
@@ -79,7 +79,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         return mNotification.size();
     }
 
-    public class ImageViewHolder extends RecyclerView.ViewHolder{
+    public class ImageViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView image_profile, post_image;
         public TextView username, text;

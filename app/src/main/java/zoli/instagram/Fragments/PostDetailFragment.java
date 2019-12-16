@@ -31,8 +31,8 @@ public class PostDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_post_detail, container, false);
 
-        SharedPreferences preferences= getContext().getSharedPreferences("PREFS", Context.MODE_PRIVATE);
-        postid = preferences.getString("postid","none");
+        SharedPreferences preferences = getContext().getSharedPreferences("PREFS", Context.MODE_PRIVATE);
+        postid = preferences.getString("postid", "none");
 
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -40,7 +40,7 @@ public class PostDetailFragment extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
 
         postList = new ArrayList<>();
-        postAdapter= new PostAdapter(getContext(), postList);
+        postAdapter = new PostAdapter(getContext(), postList);
         recyclerView.setAdapter(postAdapter);
 
         PostApi.readPost(postid, postList, postAdapter);

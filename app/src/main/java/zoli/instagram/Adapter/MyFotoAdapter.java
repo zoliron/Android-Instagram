@@ -27,14 +27,14 @@ public class MyFotoAdapter extends RecyclerView.Adapter<MyFotoAdapter.ViewHolder
     private List<Post> mPosts;
 
     public MyFotoAdapter(Context context, List<Post> mPosts) {
-        this.context=context;
-        this.mPosts=mPosts;
+        this.context = context;
+        this.mPosts = mPosts;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view =LayoutInflater.from(context).inflate(R.layout.fotos_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.fotos_item, parent, false);
         return new MyFotoAdapter.ViewHolder(view);
     }
 
@@ -52,7 +52,7 @@ public class MyFotoAdapter extends RecyclerView.Adapter<MyFotoAdapter.ViewHolder
                 editor.putString("postid", post.getPostid());
                 editor.apply();
 
-                ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new PostDetailFragment()).commit();
+                ((FragmentActivity) context).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new PostDetailFragment()).commit();
             }
         });
 
@@ -64,7 +64,7 @@ public class MyFotoAdapter extends RecyclerView.Adapter<MyFotoAdapter.ViewHolder
         return mPosts.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView post_image;
 

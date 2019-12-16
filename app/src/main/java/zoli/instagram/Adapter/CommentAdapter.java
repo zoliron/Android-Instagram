@@ -19,10 +19,9 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.List;
 
-import zoli.instagram.Api.CommentApi;
-import zoli.instagram.Api.UserApi;
 import zoli.instagram.MainActivity;
 import zoli.instagram.Model.Comment;
+import zoli.instagram.Model.User;
 import zoli.instagram.R;
 
 

@@ -39,10 +39,10 @@ public class SearchFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        search_bar =  view.findViewById(R.id.search_bar);
+        search_bar = view.findViewById(R.id.search_bar);
 
-        mUsers =  new ArrayList<>();
-        userAdapter= new UserAdapter(getContext(),mUsers,true);
+        mUsers = new ArrayList<>();
+        userAdapter = new UserAdapter(getContext(), mUsers, true);
         recyclerView.setAdapter(userAdapter);
 
         UserApi.readUsers(search_bar, mUsers, userAdapter);

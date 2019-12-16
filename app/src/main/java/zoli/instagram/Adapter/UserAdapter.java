@@ -1,7 +1,6 @@
 package zoli.instagram.Adapter;
 
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,7 +37,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ImageViewHolde
     private boolean isFragment;
 
 
-    public UserAdapter(Context context, List<User> users, boolean isFragment){
+    public UserAdapter(Context context, List<User> users, boolean isFragment) {
         mContext = context;
         mUsers = users;
         this.isFragment = isFragment;

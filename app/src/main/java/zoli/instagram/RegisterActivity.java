@@ -10,9 +10,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import zoli.instagram.Api.UserApi;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -20,6 +29,8 @@ public class RegisterActivity extends AppCompatActivity {
     Button register;
     TextView txt_login;
 
+    FirebaseAuth auth;
+    DatabaseReference reference;
     ProgressDialog pd;
 
     @Override
@@ -33,6 +44,8 @@ public class RegisterActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         register = findViewById(R.id.register);
         txt_login = findViewById(R.id.txt_login);
+
+        auth = FirebaseAuth.getInstance();
 
         // Listens when login is clicked and changes view from RegisterActivity to LoginActivity
         txt_login.setOnClickListener(new View.OnClickListener() {
@@ -63,9 +76,48 @@ public class RegisterActivity extends AppCompatActivity {
                     pd.dismiss();
                     Toast.makeText(RegisterActivity.this, "Password must have atleast 6 characters", Toast.LENGTH_SHORT).show();
                 } else {
-                    UserApi.register(pd, str_username, str_fullname, str_email, str_password, RegisterActivity.this, RegisterActivity.this);
+                    register(str_username, str_fullname, str_email, str_password);
                 }
             }
         });
+    }
+
+    // Creating new user in Firebase Authentication and store his/her information in Firebase Database
+    private void register(final String username, final String fullname, final String email, String password){
+        auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()){
+                            FirebaseUser firebaseUser = auth.getCurrentUser();
+                            String userID = firebaseUser.getUid();
+
+                            reference = FirebaseDatabase.getInstance().getReference().child("Users").child(userID);
+
+                            HashMap<String, Object> hashMap = new HashMap<>();
+                            hashMap.put("id", userID);
+                            hashMap.put("username", username);
+                            hashMap.put("fullname", fullname);
+                            hashMap.put("bio", "");
+                            hashMap.put("email", email);
+                            hashMap.put("imageurl", "https://firebasestorage.googleapis.com/v0/b/android-instagram-89c73.appspot.com/o/placeholder.png?alt=media&token=d5425fe4-9252-492f-8b69-44c81da0c754");
+
+                            reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()){
+                                        pd.dismiss();
+                                        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(intent);
+                                    }
+                                }
+                            });
+                        } else {
+                            pd.dismiss();
+                            Toast.makeText(RegisterActivity.this, "You can't register with this email or password", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 }

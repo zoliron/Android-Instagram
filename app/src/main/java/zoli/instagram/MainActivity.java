@@ -1,13 +1,13 @@
 package zoli.instagram;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
 
         Bundle intent = getIntent().getExtras();
-        if (intent != null){
+        if (intent != null) {
             String publisher = intent.getString("publisherid");
 
             SharedPreferences.Editor editor = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
@@ -50,14 +50,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
     }
 
     // Listener for item selected on the navigation bar
     private BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-            switch (menuItem.getItemId()){
+            switch (menuItem.getItemId()) {
                 case R.id.nav_home:
                     selectedFragment = new HomeFragment();
                     break;
@@ -79,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
 
-            if (selectedFragment != null){
+            if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
             }
 
